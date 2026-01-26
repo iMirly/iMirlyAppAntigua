@@ -1,145 +1,157 @@
 package com.example.imirly.ui.publicar
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.imirly.data.local.AnunciosStore
 import com.example.imirly.data.model.Categoria
+import com.example.imirly.data.model.DiaDisponibilidad
 import com.example.imirly.data.model.Formulario
-import com.example.imirly.data.model.MiAnuncio
 import com.example.imirly.data.model.Subcategoria
 import com.example.imirly.data.repository.CategoriasRepository
 import com.example.imirly.data.repository.FormulariosRepository
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class PublicarViewModel(application: Application) : AndroidViewModel(application) {
+class PublicarViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    /* ---------------- REPOSITORIES ---------------- */
+    /* ================= DATOS PERSONALES ================= */
+
+    val nombre = mutableStateOf("")
+    val apellidos = mutableStateOf("")
+    val dni = mutableStateOf("")
+    val telefono = mutableStateOf("")
+
+    /* ================= DATOS DEL SERVICIO ================= */
+
+    val titulo = mutableStateOf("")
+    val descripcion = mutableStateOf("")
+    val precioHora = mutableStateOf("")
+    val ubicacion = mutableStateOf("")
+
+    /* ================= CATEGORÍAS ================= */
 
     private val categoriasRepository = CategoriasRepository(application)
     private val formulariosRepository = FormulariosRepository(application)
-    private val anunciosStore = AnunciosStore(application)
 
-    /* ---------------- PASO 1 ---------------- */
-
-    val categorias = mutableStateOf<List<Categoria>>(emptyList())
+    val categorias = mutableStateOf(emptyList<Categoria>())
     val subcategorias = mutableStateOf<List<Subcategoria>>(emptyList())
 
-    var categoriaId = mutableStateOf("")
-        private set
+    val categoriaId = mutableStateOf("")
+    val subcategoriaId = mutableStateOf("")
 
-    var subcategoriaId = mutableStateOf("")
-        private set
+    /* ================= FORMULARIO DINÁMICO ================= */
 
-    var titulo = mutableStateOf("")
-
-    var descripcion = mutableStateOf("")
-    var provincia = mutableStateOf("")
-
-    /* ---------------- PASO 2 ---------------- */
-
-    var formulario = mutableStateOf<Formulario?>(null)
-        private set
-
+    val formulario = mutableStateOf<Formulario?>(null)
     val valoresFormulario = mutableStateMapOf<String, Any>()
-
-    /* ---------------- INIT ---------------- */
 
     init {
         cargarCategorias()
     }
 
-    /* ---------------- CATEGORÍAS ---------------- */
-
     private fun cargarCategorias() {
         categorias.value = categoriasRepository.obtenerCategorias()
     }
 
-    fun seleccionarCategoria(categoriaSeleccionada: String) {
-        categoriaId.value = categoriaSeleccionada
+    fun seleccionarCategoria(id: String) {
+        categoriaId.value = id
         subcategoriaId.value = ""
+        formulario.value = null
         valoresFormulario.clear()
 
         subcategorias.value =
-            categoriasRepository.obtenerSubcategorias(categoriaSeleccionada)
+            categoriasRepository.obtenerSubcategoriasPorCategoria(id)
     }
 
-    fun seleccionarSubcategoria(subcategoriaSeleccionada: String) {
-        subcategoriaId.value = subcategoriaSeleccionada
+    fun seleccionarSubcategoria(id: String) {
+        subcategoriaId.value = id
     }
-
-    /* ---------------- FORMULARIO ---------------- */
 
     fun cargarFormulario() {
+        if (categoriaId.value.isBlank() || subcategoriaId.value.isBlank()) return
+
         formulario.value = formulariosRepository.obtenerFormulario(
-            categoriaId.value,
-            subcategoriaId.value
+            categoriaId = categoriaId.value,
+            subcategoriaId = subcategoriaId.value
         )
-        valoresFormulario.clear()
     }
 
-    fun onCampoChange(id: String, value: Any) {
-        valoresFormulario[id] = value
+    fun onCampoChange(campoId: String, valor: Any) {
+        valoresFormulario[campoId] = valor
     }
 
-    /* ---------------- VALIDACIONES ---------------- */
 
-    fun validarPaso1(): Boolean =
-        categoriaId.value.isNotBlank() &&
-                subcategoriaId.value.isNotBlank() &&
-                titulo.value.isNotBlank() &&
-                descripcion.value.isNotBlank() &&
-                provincia.value.isNotBlank()
+    /* ================= VALIDACIONES ================= */
 
 
+    fun validarPaso1(): Boolean {
+        return nombre.value.isNotBlank()
+                && apellidos.value.isNotBlank()
+                && dni.value.isNotBlank()
+                && telefono.value.isNotBlank()
+                && categoriaId.value.isNotBlank()
+                && subcategoriaId.value.isNotBlank()
+                && titulo.value.isNotBlank()
+                && precioHora.value.isNotBlank()
+                && ubicacion.value.isNotBlank()
+                && descripcion.value.isNotBlank()
+    }
+
+    /**
+     * Paso 2 es válido si:
+     * - al menos un día está activo
+     * - los días activos tienen desde < hasta
+     * - los campos requeridos del formulario dinámico están rellenos
+     */
     fun validarPaso2(): Boolean {
-        val campos = formulario.value?.campos ?: return false
-        return campos.all { campo ->
+
+        val hayDiaActivo = diasDisponibilidad.any { it.activo }
+        if (!hayDiaActivo) return false
+
+        val horariosValidos = diasDisponibilidad
+            .filter { it.activo }
+            .all { it.desde < it.hasta }
+
+        if (!horariosValidos) return false
+
+        return formulario.value?.campos?.all { campo ->
             !campo.required || valoresFormulario.containsKey(campo.id)
-        }
+        } ?: true
     }
 
-    /* ---------------- PUBLICAR ---------------- */
+
+    /* ================= PASO 2 - DISPONIBILIDAD ================= */
+
+    val diasDisponibilidad = mutableStateListOf(
+        DiaDisponibilidad("Lunes"),
+        DiaDisponibilidad("Martes"),
+        DiaDisponibilidad("Miércoles"),
+        DiaDisponibilidad("Jueves"),
+        DiaDisponibilidad("Viernes"),
+        DiaDisponibilidad("Sábado"),
+        DiaDisponibilidad("Domingo")
+    )
+
+    fun toggleDia(index: Int, activo: Boolean) {
+        diasDisponibilidad[index] =
+            diasDisponibilidad[index].copy(activo = activo)
+    }
+
+    fun cambiarDesde(index: Int, hora: String) {
+        diasDisponibilidad[index] =
+            diasDisponibilidad[index].copy(desde = hora)
+    }
+
+    fun cambiarHasta(index: Int, hora: String) {
+        diasDisponibilidad[index] =
+            diasDisponibilidad[index].copy(hasta = hora)
+    }
+
+    /* ================= PUBLICAR ================= */
 
     fun publicarAnuncio(onFinish: () -> Unit) {
-        viewModelScope.launch {
-
-            val anuncio = MiAnuncio(
-                id = "", // se genera en el store
-                titulo = titulo.value,
-                categoria = categoriaId.value,
-                subcategoria = subcategoriaId.value,
-                precioHora = valoresFormulario["precio"]?.toString() ?: "",
-                imagenUrl = null,
-                visitas = 0,
-                favoritos = 0,
-                fecha = fechaActual(),
-                activo = true
-            )
-
-            anunciosStore.guardarAnuncio(anuncio)
-
-            limpiarFormulario()
-            onFinish()
-        }
-    }
-
-    private fun limpiarFormulario() {
-        categoriaId.value = ""
-        subcategoriaId.value = ""
-        titulo.value = ""
-        provincia.value = ""
-        valoresFormulario.clear()
-        formulario.value = null
-    }
-
-    private fun fechaActual(): String {
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        return sdf.format(Date())
+        // Aquí más adelante irá el guardado real (backend / datastore)
+        onFinish()
     }
 }

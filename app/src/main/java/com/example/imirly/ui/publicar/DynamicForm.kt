@@ -61,6 +61,7 @@ fun DynamicForm(
                         valores[campo.id] as? Set<String> ?: emptySet()
 
                     Text(campo.label)
+
                     campo.opciones.forEach { opcion ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
@@ -76,6 +77,7 @@ fun DynamicForm(
                         }
                     }
                 }
+
             }
 
         }

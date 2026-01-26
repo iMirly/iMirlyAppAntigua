@@ -54,7 +54,7 @@ fun ResumenPublicarScreen(
                 ResumenRow("Categoría", viewModel.categoriaId.value)
                 ResumenRow("Subcategoría", viewModel.subcategoriaId.value)
                 ResumenRow("Título", viewModel.titulo.value)
-                ResumenRow("Ubicación", viewModel.provincia.value)
+                ResumenRow(label = "Ubicación", value = viewModel.ubicacion.value)
             }
 
             // DETALLES

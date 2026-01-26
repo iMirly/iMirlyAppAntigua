@@ -67,6 +67,10 @@ class CategoriasRepository(
         return lista
     }
 
+    fun obtenerSubcategoriasPorCategoria(categoriaId: String): List<Subcategoria> {
+        return obtenerSubcategorias(categoriaId)
+    }
+
     fun categoriaCoincideConBusqueda(
         categoria: Categoria,
         texto: String

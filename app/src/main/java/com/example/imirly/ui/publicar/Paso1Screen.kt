@@ -3,40 +3,25 @@ package com.example.imirly.ui.publicar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import com.example.imirly.data.model.Categoria
 import com.example.imirly.data.model.Subcategoria
+
+/* ================= PANTALLA PASO 1 ================= */
 
 @Composable
 fun Paso1Screen(
     viewModel: PublicarViewModel,
     onContinue: () -> Unit
 ) {
-    val categorias = viewModel.categorias.value
-    val subcategorias = viewModel.subcategorias.value
-
-
-
-    val provinciasEspaña = listOf(
-        "Álava","Albacete","Alicante","Almería","Asturias","Ávila",
-        "Badajoz","Barcelona","Burgos","Cáceres","Cádiz","Cantabria",
-        "Castellón","Ciudad Real","Córdoba","Cuenca",
-        "Girona","Granada","Guadalajara","Guipúzcoa","Huelva","Huesca",
-        "Illes Balears","Jaén","La Coruña","La Rioja","Las Palmas","León",
-        "Lleida","Lugo","Madrid","Málaga","Murcia","Navarra","Ourense",
-        "Palencia","Pontevedra","Salamanca","Santa Cruz de Tenerife",
-        "Segovia","Sevilla","Soria","Tarragona","Teruel","Toledo",
-        "Valencia","Valladolid","Vizcaya","Zamora","Zaragoza"
-    )
-
     Column(modifier = Modifier.fillMaxSize()) {
 
         PasoHeader(
@@ -52,91 +37,161 @@ fun Paso1Screen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            item { FotoServicioCard() }
-
             item {
-                SelectorCategoriaCard(
-                    categorias = categorias,
-                    selectedId = viewModel.categoriaId.value,
-                    onSelect = { categoria ->
-                        viewModel.seleccionarCategoria(categoria.id)
-                    }
-                )
+                CardBase {
+                    Text("Nombre")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.nombre.value,
+                        onValueChange = { viewModel.nombre.value = it },
+                        placeholder = { Text("Introduce tu nombre") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words
+                        )
+                    )
+                }
             }
-
-            item {
-                SelectorSubcategoriaCard(
-                    subcategorias = subcategorias,
-                    enabled = viewModel.categoriaId.value.isNotBlank(),
-                    selectedId = viewModel.subcategoriaId.value,
-                    onSelect = { sub ->
-                        viewModel.seleccionarSubcategoria(sub.id)
-                    }
-                )
-            }
-
-            /* ---------- TÍTULO ---------- */
 
             item {
                 CardBase {
-                    Text("Título del servicio", style = MaterialTheme.typography.labelLarge)
+                    Text("Apellidos")
                     Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.apellidos.value,
+                        onValueChange = { viewModel.apellidos.value = it },
+                        placeholder = { Text("Introduce tus apellidos") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words
+                        )
+                    )
+                }
+            }
 
+            item {
+                CardBase {
+                    Text("DNI")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.dni.value,
+                        onValueChange = { viewModel.dni.value = it },
+                        placeholder = { Text("12345678A") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Characters
+                        )
+                    )
+                }
+            }
+
+            item {
+                CardBase {
+                    Text("Número de teléfono")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.telefono.value,
+                        onValueChange = { viewModel.telefono.value = it },
+                        placeholder = { Text("+34 600 000 000") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone
+                        )
+                    )
+                }
+            }
+
+            item {
+                FotoServicioCard()
+            }
+
+            item {
+                SelectorCategoria(
+                    categorias = viewModel.categorias.value,
+                    selectedId = viewModel.categoriaId.value,
+                    onSelect = { viewModel.seleccionarCategoria(it.id) }
+                )
+            }
+
+            item {
+                SelectorSubcategoria(
+                    subcategorias = viewModel.subcategorias.value,
+                    enabled = viewModel.categoriaId.value.isNotBlank(),
+                    selectedId = viewModel.subcategoriaId.value,
+                    onSelect = { viewModel.seleccionarSubcategoria(it.id) }
+                )
+            }
+
+
+            item {
+                CardBase {
+                    Text("Título del servicio")
+                    Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = viewModel.titulo.value,
                         onValueChange = { viewModel.titulo.value = it },
                         placeholder = {
-                            Text("Ej: Cuelgo cuadros y estanterías")
+                            Text("Ej: Fontanero profesional con experiencia")
                         },
+                        modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Text,
                             capitalization = KeyboardCapitalization.Sentences
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                        )
                     )
                 }
             }
 
-            /* ---------- DESCRIPCIÓN ---------- */
+            /*
+            item {
+                CardBase {
+                    Text("Precio por hora")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.precioHora.value,
+                        onValueChange = { viewModel.precioHora.value = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        trailingIcon = { Text("€/h") }
+                    )
+                }
+            }
+            */
 
             item {
                 CardBase {
-                    Text("Descripción del servicio", style = MaterialTheme.typography.labelLarge)
+                    Text("Ubicación")
                     Spacer(Modifier.height(8.dp))
-
                     OutlinedTextField(
-                        value = viewModel.descripcion.value,
-                        onValueChange = { viewModel.descripcion.value = it },
-                        placeholder = {
-                            Text("Describe tu experiencia, qué incluye el servicio, materiales, etc.")
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            capitalization = KeyboardCapitalization.Sentences
-                        ),
-                        minLines = 4,
+                        value = viewModel.ubicacion.value,
+                        onValueChange = { viewModel.ubicacion.value = it },
+                        placeholder = { Text("Ej: Madrid Centro") },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
 
-            /* ---------- UBICACIÓN ---------- */
-
             item {
-                SelectorDropdownCard(
-                    label = "Ubicación",
-                    enabled = true,
-                    selectedText = viewModel.provincia.value,
-                    placeholderText = "Selecciona una provincia",
-                    items = provinciasEspaña,
-                    onItemSelected = { provincia ->
-                        viewModel.provincia.value = provincia
-                    }
-                )
+                CardBase {
+                    Text("Descripción")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = viewModel.descripcion.value,
+                        onValueChange = {
+                            if (it.length <= 500) viewModel.descripcion.value = it
+                        },
+                        placeholder = {
+                            Text("Describe tu servicio, experiencia y lo que ofreces")
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        minLines = 4
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text("${viewModel.descripcion.value.length}/500")
+                }
             }
         }
-
-        /* ---------- CONTINUAR ---------- */
 
         Button(
             onClick = {
@@ -153,6 +208,7 @@ fun Paso1Screen(
         ) {
             Text("Continuar")
         }
+
     }
 }
 
@@ -165,7 +221,7 @@ fun PasoHeader(
     totalPasos: Int
 ) {
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
@@ -178,105 +234,69 @@ fun PasoHeader(
 }
 
 @Composable
-fun CardBase(content: @Composable ColumnScope.() -> Unit) {
+fun CardBase(
+    content: @Composable ColumnScope.() -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Column(Modifier.padding(16.dp), content = content)
+        Column(
+            modifier = Modifier.padding(16.dp),
+            content = content
+        )
     }
 }
 
 @Composable
 fun FotoServicioCard() {
     CardBase {
-        Text("Foto del servicio", style = MaterialTheme.typography.labelLarge)
+        Text("Foto del servicio")
         Spacer(Modifier.height(12.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp)
                 .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = RoundedCornerShape(12.dp)
+                    1.dp,
+                    MaterialTheme.colorScheme.outline,
+                    RoundedCornerShape(12.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Text("Subir imagen")
+            Text("Subir imagen\nJPG, PNG o GIF (máx. 5MB)")
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectorCategoriaCard(
+fun SelectorCategoria(
     categorias: List<Categoria>,
     selectedId: String,
     onSelect: (Categoria) -> Unit
 ) {
-    val selectedNombre = categorias.firstOrNull { it.id == selectedId }?.nombre ?: ""
-
-    SelectorDropdownCard(
-        label = "Categoría",
-        enabled = true,
-        selectedText = selectedNombre,
-        placeholderText = "Selecciona",
-        items = categorias.map { it.nombre },
-        onItemSelected = { nombre ->
-            categorias.firstOrNull { it.nombre == nombre }?.let(onSelect)
-        }
-    )
-}
-
-@Composable
-fun SelectorSubcategoriaCard(
-    subcategorias: List<Subcategoria>,
-    enabled: Boolean,
-    selectedId: String,
-    onSelect: (Subcategoria) -> Unit
-) {
-    val selectedNombre = subcategorias.firstOrNull { it.id == selectedId }?.nombre ?: ""
-
-    SelectorDropdownCard(
-        label = "Subcategoría",
-        enabled = enabled,
-        selectedText = selectedNombre,
-        placeholderText = if (enabled) "Selecciona" else "Selecciona una categoría primero",
-        items = subcategorias.map { it.nombre },
-        onItemSelected = { nombre ->
-            subcategorias.firstOrNull { it.nombre == nombre }?.let(onSelect)
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SelectorDropdownCard(
-    label: String,
-    enabled: Boolean,
-    selectedText: String,
-    placeholderText: String,
-    items: List<String>,
-    onItemSelected: (String) -> Unit
-) {
     var expanded by remember { mutableStateOf(false) }
+    val selectedNombre =
+        categorias.firstOrNull { it.id == selectedId }?.nombre ?: ""
 
     CardBase {
-        Text(label, style = MaterialTheme.typography.labelLarge)
+        Text("Categoría")
         Spacer(Modifier.height(8.dp))
 
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { if (enabled) expanded = !expanded }
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = selectedText,
+                value = selectedNombre,
                 onValueChange = {},
                 readOnly = true,
-                enabled = enabled,
-                placeholder = { Text(placeholderText) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                placeholder = { Text("Selecciona una categoría") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                },
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
@@ -286,12 +306,71 @@ fun SelectorDropdownCard(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                items.forEach { item ->
+                categorias.forEach { categoria ->
                     DropdownMenuItem(
-                        text = { Text(item) },
+                        text = { Text(categoria.nombre) },
                         onClick = {
                             expanded = false
-                            onItemSelected(item)
+                            onSelect(categoria)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectorSubcategoria(
+    subcategorias: List<Subcategoria>,
+    enabled: Boolean,
+    selectedId: String,
+    onSelect: (Subcategoria) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val selectedNombre =
+        subcategorias.firstOrNull { it.id == selectedId }?.nombre ?: ""
+
+    CardBase {
+        Text("Subcategoría")
+        Spacer(Modifier.height(8.dp))
+
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { if (enabled) expanded = !expanded }
+        ) {
+            OutlinedTextField(
+                value = selectedNombre,
+                onValueChange = {},
+                readOnly = true,
+                enabled = enabled,
+                placeholder = {
+                    Text(
+                        if (enabled)
+                            "Selecciona una subcategoría"
+                        else
+                            "Selecciona una categoría primero"
+                    )
+                },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                subcategorias.forEach { sub ->
+                    DropdownMenuItem(
+                        text = { Text(sub.nombre) },
+                        onClick = {
+                            expanded = false
+                            onSelect(sub)
                         }
                     )
                 }

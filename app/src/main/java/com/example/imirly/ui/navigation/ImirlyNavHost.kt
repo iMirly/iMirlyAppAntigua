@@ -169,8 +169,7 @@ fun ImirlyNavHost(
         composable(Routes.PublicarPaso2.route) {
             Paso2Screen(
                 viewModel = publicarViewModel,
-                navController = navController,
-                onContinue = {
+                onPublicar = {
                     navController.navigate(Routes.PublicarResumen.route)
                 }
             )
