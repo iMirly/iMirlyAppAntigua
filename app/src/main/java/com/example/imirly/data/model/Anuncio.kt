@@ -11,8 +11,8 @@ data class Anuncio(
     val provincia: String,
     val titulo: String,
     val descripcion: String,
-
-    val tipoPrecio: TipoPrecio,
+    val tipoPrecio: String,
     val precio: Double?,
-    val detalles: JSONObject
+    val detalles: JSONObject,
+    val localidad: String
 )

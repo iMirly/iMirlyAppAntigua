@@ -1,12 +1,10 @@
 package com.example.imirly.data.local
 
-
 import android.content.Context
+import androidx.core.content.edit
 import com.example.imirly.data.model.Anuncio
 import org.json.JSONArray
 import org.json.JSONObject
-import androidx.core.content.edit
-import com.example.imirly.data.model.TipoPrecio
 
 class FavoritesStore(context: Context) {
 
@@ -23,20 +21,6 @@ class FavoritesStore(context: Context) {
         for (i in 0 until array.length()) {
             val o = array.getJSONObject(i)
 
-            // ---------- TIPO PRECIO SEGURO ----------
-            val tipoPrecio = try {
-                TipoPrecio.valueOf(o.getString("tipoPrecio"))
-            } catch (e: Exception) {
-                TipoPrecio.HORA
-            }
-
-            // ---------- PRECIO NORMALIZADO ----------
-            val precio = if (o.has("precio")) {
-                o.optDouble("precio")
-            } else {
-                null
-            }
-
             list.add(
                 Anuncio(
                     id = o.getString("id"),
@@ -44,11 +28,12 @@ class FavoritesStore(context: Context) {
                     subcategoria = o.getString("subcategoria"),
                     nombre = o.getString("nombre"),
                     provincia = o.getString("provincia"),
+                    localidad = o.optString("localidad", ""),
                     titulo = o.getString("titulo"),
                     descripcion = o.getString("descripcion"),
 
-                    tipoPrecio = tipoPrecio,
-                    precio = precio,
+                    tipoPrecio = o.optString("tipoPrecio"),
+                    precio = if (o.has("precio")) o.optDouble("precio") else null,
 
                     detalles = JSONObject()
                 )
@@ -56,14 +41,6 @@ class FavoritesStore(context: Context) {
         }
 
         return list
-    }
-
-
-
-
-
-    fun clear() {
-        prefs.edit { remove(KEY) }
     }
 
     fun isFavorite(id: String): Boolean =
@@ -91,9 +68,10 @@ class FavoritesStore(context: Context) {
                 put("subcategoria", it.subcategoria)
                 put("nombre", it.nombre)
                 put("provincia", it.provincia)
+                put("localidad", it.localidad)
                 put("titulo", it.titulo)
                 put("descripcion", it.descripcion)
-                put("tipoPrecio", it.tipoPrecio.name)
+                put("tipoPrecio", it.tipoPrecio)
 
                 if (it.precio != null) {
                     put("precio", it.precio)
@@ -105,4 +83,7 @@ class FavoritesStore(context: Context) {
         prefs.edit { putString(KEY, array.toString()) }
     }
 
+    fun clear() {
+        prefs.edit { remove(KEY) }
+    }
 }

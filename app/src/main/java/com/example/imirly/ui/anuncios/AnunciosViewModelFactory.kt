@@ -19,6 +19,6 @@ class AnunciosViewModelFactory(
                 subcategoriaId
             ) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel")
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

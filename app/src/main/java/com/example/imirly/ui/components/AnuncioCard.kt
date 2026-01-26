@@ -85,10 +85,11 @@ fun AnuncioCard(
 
                 Text(
                     text = when (item.tipoPrecio) {
-                        TipoPrecio.HORA -> "por hora"
-                        TipoPrecio.SERVICIO -> "por servicio"
-                        TipoPrecio.DIA -> "por día"
-                        TipoPrecio.PROYECTO -> "por proyecto"
+                        "HORA" -> "por hora"
+                        "SERVICIO" -> "por servicio"
+                        "DIA" -> "por día"
+                        "PROYECTO" -> "por proyecto"
+                        else -> ""
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline

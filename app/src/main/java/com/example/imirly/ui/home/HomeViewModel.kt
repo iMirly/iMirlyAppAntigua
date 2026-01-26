@@ -1,3 +1,5 @@
+package com.example.imirly.ui.home
+
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -24,10 +26,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 todasLasCategorias
             } else {
                 todasLasCategorias.filter { categoria ->
-                    repository.categoriaCoincideConBusqueda(
-                        categoria = categoria,
-                        texto = text
-                    )
+                    categoria.nombre.contains(text, ignoreCase = true)
                 }
             }
     }

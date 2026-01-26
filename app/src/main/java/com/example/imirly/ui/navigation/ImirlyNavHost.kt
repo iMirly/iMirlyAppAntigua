@@ -159,6 +159,11 @@ fun ImirlyNavHost(
         composable(Routes.PublicarPaso1.route) {
             Paso1Screen(
                 viewModel = publicarViewModel,
+                onBack = {
+                    navController.navigate(Routes.Home.route) {
+                        popUpTo(Routes.Home.route) { inclusive = true }
+                    }
+                },
                 onContinue = {
                     publicarViewModel.cargarFormulario()
                     navController.navigate(Routes.PublicarPaso2.route)
@@ -169,6 +174,9 @@ fun ImirlyNavHost(
         composable(Routes.PublicarPaso2.route) {
             Paso2Screen(
                 viewModel = publicarViewModel,
+                onBack = {
+                    navController.popBackStack() // vuelve a Paso 1
+                },
                 onPublicar = {
                     navController.navigate(Routes.PublicarResumen.route)
                 }

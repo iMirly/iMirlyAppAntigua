@@ -64,10 +64,13 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
 
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
     // Material 3
     implementation("androidx.compose.material3:material3")
 
-    // 🔥 ICONOS MATERIAL (ESTA ES LA CLAVE)
+    // ICONOS MATERIAL (ESTA ES LA CLAVE)
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
 

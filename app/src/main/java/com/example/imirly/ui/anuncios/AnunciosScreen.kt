@@ -26,11 +26,14 @@ fun AnunciosScreen(
     subcategoriaId: String,
     navController: NavHostController
 ) {
+    val context = navController.context
+    val application = context.applicationContext as Application
+
     val vm: AnunciosViewModel = viewModel(
         factory = AnunciosViewModelFactory(
-            navController.context.applicationContext as Application,
-            categoryId,
-            subcategoriaId
+            application = application,
+            categoriaId = categoryId,
+            subcategoriaId = subcategoriaId
         )
     )
 

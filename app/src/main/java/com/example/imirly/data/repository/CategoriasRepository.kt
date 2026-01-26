@@ -43,21 +43,16 @@ class CategoriasRepository(
             .use { it.readText() }
 
         val root = JSONObject(json)
-
         if (!root.has(categoryId)) return emptyList()
 
-        val categoriaJson = root.getJSONObject(categoryId)
-        val items = categoriaJson.getJSONArray("items")
-
+        val items = root.getJSONObject(categoryId).getJSONArray("items")
         val lista = mutableListOf<Subcategoria>()
 
         for (i in 0 until items.length()) {
             val item = items.getJSONObject(i)
             lista.add(
                 Subcategoria(
-                    id = item.getString("nombre")
-                        .lowercase()
-                        .replace(" ", "_"),
+                    id = item.getString("nombre").lowercase().replace(" ", "_"),
                     nombre = item.getString("nombre"),
                     imagen = item.getString("imagen")
                 )
@@ -66,29 +61,6 @@ class CategoriasRepository(
 
         return lista
     }
-
-    fun obtenerSubcategoriasPorCategoria(categoriaId: String): List<Subcategoria> {
-        return obtenerSubcategorias(categoriaId)
-    }
-
-    fun categoriaCoincideConBusqueda(
-        categoria: Categoria,
-        texto: String
-    ): Boolean {
-
-        // Coincide con el nombre de la categoría
-        if (categoria.nombre.contains(texto, ignoreCase = true)) {
-            return true
-        }
-
-        // Coincide con alguna subcategoría
-        val subcategorias = obtenerSubcategorias(categoria.id)
-
-        return subcategorias.any {
-            it.nombre.contains(texto, ignoreCase = true)
-        }
-    }
-
 
     fun obtenerAnuncios(
         categoriaId: String,
@@ -105,38 +77,26 @@ class CategoriasRepository(
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
 
-            // ---------- FILTRO CATEGORIA / SUBCATEGORIA ----------
             if (
                 item.getString("categoria") != categoriaId ||
                 item.getString("subcategoria") != subcategoriaId
             ) continue
 
-            // ---------- TIPO PRECIO ----------
-            val tipoPrecio = try {
+            val tipoPrecioEnum = try {
                 TipoPrecio.valueOf(item.getString("tipoPrecio"))
             } catch (e: Exception) {
-                TipoPrecio.HORA // fallback seguro
+                TipoPrecio.HORA
             }
 
-            // ---------- DETALLES ----------
             val detalles = item.optJSONObject("detalles") ?: JSONObject()
 
-            // ---------- PRECIO NORMALIZADO ----------
-            val precio: Double? = when (tipoPrecio) {
-                TipoPrecio.HORA ->
-                    if (detalles.has("precio_hora")) detalles.optDouble("precio_hora") else null
-
-                TipoPrecio.SERVICIO ->
-                    if (detalles.has("precio_servicio")) detalles.optDouble("precio_servicio") else null
-
-                TipoPrecio.DIA ->
-                    if (detalles.has("precio_dia")) detalles.optDouble("precio_dia") else null
-
-                TipoPrecio.PROYECTO ->
-                    if (detalles.has("precio_proyecto")) detalles.optDouble("precio_proyecto") else null
+            val precio: Double? = when (tipoPrecioEnum) {
+                TipoPrecio.HORA -> detalles.optDouble("precio_hora", Double.NaN).takeIf { !it.isNaN() }
+                TipoPrecio.SERVICIO -> detalles.optDouble("precio_servicio", Double.NaN).takeIf { !it.isNaN() }
+                TipoPrecio.DIA -> detalles.optDouble("precio_dia", Double.NaN).takeIf { !it.isNaN() }
+                TipoPrecio.PROYECTO -> detalles.optDouble("precio_proyecto", Double.NaN).takeIf { !it.isNaN() }
             }
 
-            // ---------- CREAR ANUNCIO ----------
             lista.add(
                 Anuncio(
                     id = item.getString("id"),
@@ -144,13 +104,14 @@ class CategoriasRepository(
                     subcategoria = item.getString("subcategoria"),
                     nombre = item.getString("nombre"),
                     provincia = item.getString("provincia"),
+                    localidad = item.optString("localidad", ""),
                     titulo = item.getString("titulo"),
                     descripcion = item.getString("descripcion"),
-
-                    tipoPrecio = tipoPrecio,
+                    tipoPrecio = tipoPrecioEnum.name,
                     precio = precio,
                     detalles = detalles
                 )
+
             )
         }
 
@@ -168,7 +129,7 @@ class CategoriasRepository(
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
 
-            val tipoPrecio = try {
+            val tipoPrecioEnum = try {
                 TipoPrecio.valueOf(item.getString("tipoPrecio"))
             } catch (e: Exception) {
                 TipoPrecio.HORA
@@ -176,7 +137,7 @@ class CategoriasRepository(
 
             val detalles = item.optJSONObject("detalles") ?: JSONObject()
 
-            val precio: Double? = when (tipoPrecio) {
+            val precio: Double? = when (tipoPrecioEnum) {
                 TipoPrecio.HORA -> detalles.optDouble("precio_hora", Double.NaN).takeIf { !it.isNaN() }
                 TipoPrecio.SERVICIO -> detalles.optDouble("precio_servicio", Double.NaN).takeIf { !it.isNaN() }
                 TipoPrecio.DIA -> detalles.optDouble("precio_dia", Double.NaN).takeIf { !it.isNaN() }
@@ -190,22 +151,21 @@ class CategoriasRepository(
                     subcategoria = item.getString("subcategoria"),
                     nombre = item.getString("nombre"),
                     provincia = item.getString("provincia"),
+                    localidad = item.optString("localidad", ""),
                     titulo = item.getString("titulo"),
                     descripcion = item.getString("descripcion"),
-                    tipoPrecio = tipoPrecio,
+                    tipoPrecio = tipoPrecioEnum.name,
                     precio = precio,
                     detalles = detalles
                 )
+
             )
         }
 
         return lista
     }
 
-
-
     fun obtenerAnuncioPorId(id: String): Anuncio? {
         return obtenerTodosLosAnuncios().find { it.id == id }
     }
-
 }

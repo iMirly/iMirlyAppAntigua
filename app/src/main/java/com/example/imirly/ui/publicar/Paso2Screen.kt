@@ -2,6 +2,8 @@ package com.example.imirly.ui.publicar
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,26 +14,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.imirly.data.model.DiaDisponibilidad
-import androidx.navigation.NavController
+
 
 @Composable
 fun Paso2Screen(
     viewModel: PublicarViewModel,
+    onBack: () -> Unit,
     onPublicar: () -> Unit
 ) {
     val formulario = viewModel.formulario.value
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        /* ---------- HEADER ---------- */
-
-        PasoHeader(
-            titulo = "Nuevo anuncio",
-            pasoActual = 2,
-            totalPasos = 2
+        PasoHeaderPaso2(
+            onBack = onBack
         )
-
-        /* ---------- CONTENT ---------- */
 
         LazyColumn(
             modifier = Modifier
@@ -39,8 +36,6 @@ fun Paso2Screen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-
-            /* ================= DISPONIBILIDAD ================= */
 
             item {
                 CardBase {
@@ -65,8 +60,6 @@ fun Paso2Screen(
                 )
             }
 
-            /* ================= CAMPOS DINÁMICOS ================= */
-
             if (formulario != null) {
                 item {
                     CardBase {
@@ -82,8 +75,6 @@ fun Paso2Screen(
             }
         }
 
-        /* ---------- PUBLICAR ---------- */
-
         Button(
             onClick = {
                 if (viewModel.validarPaso2()) {
@@ -98,9 +89,9 @@ fun Paso2Screen(
         ) {
             Text("Publicar anuncio")
         }
-
     }
 }
+
 
 
 
@@ -194,3 +185,36 @@ fun SelectorHora(
         }
     }
 }
+
+@Composable
+fun PasoHeaderPaso2(
+    onBack: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver"
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "Nuevo anuncio",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+        Spacer(Modifier.height(8.dp))
+        LinearProgressIndicator(progress = 1f)
+        Spacer(Modifier.height(4.dp))
+        Text("Paso 2 de 2")
+    }
+}
+

@@ -61,8 +61,9 @@ class PublicarViewModel(
         valoresFormulario.clear()
 
         subcategorias.value =
-            categoriasRepository.obtenerSubcategoriasPorCategoria(id)
+            categoriasRepository.obtenerSubcategorias(id)
     }
+
 
     fun seleccionarSubcategoria(id: String) {
         subcategoriaId.value = id
@@ -93,7 +94,7 @@ class PublicarViewModel(
                 && categoriaId.value.isNotBlank()
                 && subcategoriaId.value.isNotBlank()
                 && titulo.value.isNotBlank()
-                && precioHora.value.isNotBlank()
+                /*&& precioHora.value.isNotBlank()*/
                 && ubicacion.value.isNotBlank()
                 && descripcion.value.isNotBlank()
     }

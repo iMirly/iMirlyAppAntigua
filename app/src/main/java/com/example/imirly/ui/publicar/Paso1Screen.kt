@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,14 +23,20 @@ import com.example.imirly.data.model.Subcategoria
 @Composable
 fun Paso1Screen(
     viewModel: PublicarViewModel,
+    onBack: () -> Unit,
     onContinue: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
 
+        /*
         PasoHeader(
             titulo = "Nuevo anuncio",
             pasoActual = 1,
             totalPasos = 2
+        )
+         */
+        PasoHeaderPaso1(
+            onBack = onBack
         )
 
         LazyColumn(
@@ -378,3 +387,33 @@ fun SelectorSubcategoria(
         }
     }
 }
+
+@Composable
+fun PasoHeaderPaso1(
+    onBack: () -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver"
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            Text("Nuevo anuncio", style = MaterialTheme.typography.titleLarge)
+        }
+
+        Spacer(Modifier.height(8.dp))
+        LinearProgressIndicator(progress = 0.5f)
+        Spacer(Modifier.height(4.dp))
+        Text("Paso 1 de 2")
+    }
+}
+
