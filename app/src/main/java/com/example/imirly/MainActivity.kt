@@ -29,18 +29,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        //  PRUEBA DE CONEXIÓN AL BACKEND (TEMPORAL)
-        /*
-        lifecycleScope.launch {
-            try {
-                val anuncios = RetrofitClient.api.getAnuncios()
-                Log.d("API_TEST", "Anuncios recibidos: $anuncios")
-            } catch (e: Exception) {
-                Log.e("API_TEST", "Error llamando a la API: ${e.message}", e)
-            }
-        }
-        */
-
         setContent {
             ImirlyAppTheme {
                 val navController = rememberNavController()
@@ -53,8 +41,11 @@ class MainActivity : ComponentActivity() {
                 val routesWithoutBottomBar = listOf(
                     Routes.Start.route,
                     Routes.Onboarding.route,
+                    Routes.Welcome.route,
                     Routes.Login.route,
-                    Routes.Register.route,
+                    Routes.RegisterStepName.route,
+                    Routes.RegisterStepEmail.route,
+                    Routes.RegisterStepPassword.route,
                     Routes.Publicar.route,
                     Routes.PublicarPaso1.route,
                     Routes.PublicarPaso2.route,
@@ -66,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         if (
                             currentRoute != null &&
                             routesWithoutBottomBar.none { route ->
-                                currentRoute.startsWith(route)
+                                currentRoute == route || currentRoute.startsWith(route)
                             }
                         ) {
                             ImirlyBottomBar(navController)

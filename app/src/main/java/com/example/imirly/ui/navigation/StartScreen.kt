@@ -18,25 +18,15 @@ fun StartScreen(
     LaunchedEffect(Unit) {
         scope.launch {
             val isLoggedIn = sessionStore.isLoggedIn()
-            val onboardingDone = sessionStore.isOnboardingDone()
-
-            when {
-                isLoggedIn -> {
-                    navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Start.route) { inclusive = true }
-                    }
+            
+            if (isLoggedIn) {
+                navController.navigate(Routes.Home.route) {
+                    popUpTo(Routes.Start.route) { inclusive = true }
                 }
-
-                onboardingDone -> {
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Start.route) { inclusive = true }
-                    }
-                }
-
-                else -> {
-                    navController.navigate(Routes.Onboarding.route) {
-                        popUpTo(Routes.Start.route) { inclusive = true }
-                    }
+            } else {
+                // Si no está logueado, enviamos a Welcome (puedes volver a poner el onboarding aquí luego)
+                navController.navigate(Routes.Welcome.route) {
+                    popUpTo(Routes.Start.route) { inclusive = true }
                 }
             }
         }

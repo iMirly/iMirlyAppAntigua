@@ -11,46 +11,44 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.imirly.data.local.SessionStore
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onBack: () -> Unit
+fun RegisterStepPasswordScreen(
+    viewModel: RegisterViewModel,
+    onBack: () -> Unit,
+    onFinish: () -> Unit
 ) {
-    val context = LocalContext.current
-    val sessionStore = remember { SessionStore(context) }
-    val scope = rememberCoroutineScope()
-
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-
-    val isValid = email.isNotBlank() && password.isNotBlank()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = Color(0xFF4A34AC)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-            )
+            Column {
+                LinearProgressIndicator(
+                    progress = { 1f },
+                    modifier = Modifier.fillMaxWidth().height(4.dp),
+                    color = Color(0xFF4A34AC),
+                    trackColor = Color(0xFFE0E0E0)
+                )
+                TopAppBar(
+                    title = { },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Volver",
+                                tint = Color(0xFF4A34AC)
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                )
+            }
         },
         containerColor = Color.White
     ) { padding ->
@@ -58,13 +56,12 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.Start
+                .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Iniciar sesión",
+                text = "Crea tu contraseña",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     color = Color(0xFF4A34AC),
                     fontWeight = FontWeight.Bold,
@@ -75,7 +72,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Introduce tus credenciales para continuar:",
+                text = "Para que tu cuenta esté bien protegida, debe tener al menos 8 caracteres:",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = Color.Gray,
                     lineHeight = 20.sp
@@ -84,32 +81,10 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Email Field
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text("Correo electrónico", color = Color.Gray.copy(alpha = 0.7f)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFFD7D1F3),
-                    unfocusedContainerColor = Color(0xFFD7D1F3),
-                    disabledContainerColor = Color(0xFFD7D1F3),
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color(0xFF4A34AC)
-                ),
-                shape = RoundedCornerShape(12.dp),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             // Password Field
             TextField(
-                value = password,
-                onValueChange = { password = it },
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
                 placeholder = { Text("Contraseña", color = Color.Gray.copy(alpha = 0.7f)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,44 +111,22 @@ fun LoginScreen(
                 singleLine = true
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextButton(
-                onClick = { /* TODO: Recuperar contraseña */ },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(
-                    text = "¿Has olvidado la contraseña?",
-                    color = Color(0xFF7E69D4),
-                    fontSize = 14.sp
-                )
-            }
-
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = {
-                    scope.launch {
-                        sessionStore.login(
-                            userId = email,
-                            userName = email.substringBefore("@"),
-                            email = email
-                        )
-                        onLoginSuccess()
-                    }
-                },
-                enabled = isValid,
+                onClick = onFinish,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4329AC),
-                    disabledContainerColor = Color(0xFF4329AC).copy(alpha = 0.5f)
+                    containerColor = Color(0xFF7E69D4),
+                    disabledContainerColor = Color(0xFF7E69D4).copy(alpha = 0.5f)
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                enabled = viewModel.password.length >= 8
             ) {
                 Text(
-                    text = "Entrar",
+                    text = "Finalizar registro",
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = Color.White,
                         fontWeight = FontWeight.Bold

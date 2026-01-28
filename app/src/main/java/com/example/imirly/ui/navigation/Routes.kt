@@ -6,8 +6,14 @@ sealed class Routes(val route: String) {
 
     object Start : Routes("start")
     object Onboarding : Routes("onboarding")
+    object Welcome : Routes("welcome")
     object Login : Routes("login")
-    object Register : Routes("register")
+    
+    // Flujo de Registro Paso a Paso
+    object RegisterStepName : Routes("register/name")
+    object RegisterStepCity : Routes("register/city")
+    object RegisterStepEmail : Routes("register/email")
+    object RegisterStepPassword : Routes("register/password")
 
     /* ---------------- RUTAS PRINCIPALES (BOTTOM BAR) ---------------- */
 

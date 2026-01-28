@@ -19,7 +19,12 @@ import com.example.imirly.ui.publicar.ResumenPublicarScreen
 import com.example.imirly.ui.subcategories.SubcategoriesScreen
 import com.example.imirly.ui.onboarding.OnboardingScreen
 import com.example.imirly.ui.auth.LoginScreen
-import com.example.imirly.ui.auth.RegisterScreen
+import com.example.imirly.ui.auth.RegisterStepNameScreen
+import com.example.imirly.ui.auth.RegisterStepCityScreen
+import com.example.imirly.ui.auth.RegisterStepEmailScreen
+import com.example.imirly.ui.auth.RegisterStepPasswordScreen
+import com.example.imirly.ui.auth.RegisterViewModel
+import com.example.imirly.ui.auth.WelcomeScreen
 import com.example.imirly.ui.chat.ChatMirlyScreen
 import com.example.imirly.ui.favoritos.FavoritosScreen
 import com.example.imirly.ui.perfil.AyudaScreen
@@ -40,6 +45,7 @@ fun ImirlyNavHost(
     modifier: Modifier = Modifier
 ) {
     val publicarViewModel: PublicarViewModel = viewModel()
+    val registerViewModel: RegisterViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -58,7 +64,7 @@ fun ImirlyNavHost(
         composable(Routes.Onboarding.route) {
             OnboardingScreen(
                 onFinish = {
-                    navController.navigate(Routes.Login.route) {
+                    navController.navigate(Routes.Welcome.route) {
                         popUpTo(Routes.Onboarding.route) { inclusive = true }
                     }
                 }
@@ -67,6 +73,23 @@ fun ImirlyNavHost(
 
         /* ---------------- AUTH ---------------- */
 
+        composable(Routes.Welcome.route) {
+            WelcomeScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Routes.Login.route)
+                },
+                onNavigateToRegister = {
+                    registerViewModel.reset()
+                    navController.navigate(Routes.RegisterStepName.route)
+                },
+                onSocialLoginSuccess = {
+                    navController.navigate(Routes.Home.route) {
+                        popUpTo(Routes.Welcome.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Routes.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -74,21 +97,53 @@ fun ImirlyNavHost(
                         popUpTo(Routes.Login.route) { inclusive = true }
                     }
                 },
-                onGoToRegister = {
-                    navController.navigate(Routes.Register.route)
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
 
-        composable(Routes.Register.route) {
-            RegisterScreen(
-                onRegisterSuccess = {
+        /* ---------------- REGISTRO PASO A PASO ---------------- */
+
+        composable(Routes.RegisterStepName.route) {
+            RegisterStepNameScreen(
+                viewModel = registerViewModel,
+                onBack = { navController.popBackStack() },
+                onNext = {
+                    navController.navigate(Routes.RegisterStepCity.route)
+                }
+            )
+        }
+
+        composable(Routes.RegisterStepCity.route) {
+            RegisterStepCityScreen(
+                viewModel = registerViewModel,
+                onBack = { navController.popBackStack() },
+                onNext = {
+                    navController.navigate(Routes.RegisterStepEmail.route)
+                }
+            )
+        }
+
+        composable(Routes.RegisterStepEmail.route) {
+            RegisterStepEmailScreen(
+                viewModel = registerViewModel,
+                onBack = { navController.popBackStack() },
+                onNext = {
+                    navController.navigate(Routes.RegisterStepPassword.route)
+                }
+            )
+        }
+
+        composable(Routes.RegisterStepPassword.route) {
+            RegisterStepPasswordScreen(
+                viewModel = registerViewModel,
+                onBack = { navController.popBackStack() },
+                onFinish = {
+                    // Aquí iría la lógica de registro real con el backend
                     navController.navigate(Routes.Home.route) {
-                        popUpTo(Routes.Register.route) { inclusive = true }
+                        popUpTo(Routes.Welcome.route) { inclusive = true }
                     }
-                },
-                onGoToLogin = {
-                    navController.popBackStack()
                 }
             )
         }
