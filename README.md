@@ -168,16 +168,32 @@ No requiere backend: todos los datos provienen de `app/src/main/assets/`.
 | [**iMirlyWeb-MVP**](https://github.com/iMirly/iMirlyWeb-MVP) | Demo web del marketplace |
 | [**iMirlyPresentacion**](https://github.com/iMirly/iMirlyPresentacion) | Web de presentación del TFC |
 
-# 👥 Equipo
+## 👥 Equipo
 
-Proyecto desarrollado como TFC del ciclo **DAM** en **NDT NewDigitalTalent · Granada**.
+<p align="center"><b>Trabajo Fin de Ciclo DAM — New Digital Talent, Granada · 2025</b></p>
 
-<div align="center">
-  <a href="https://github.com/iMirly" target="_blank">
-    <img src="https://img.shields.io/badge/Organización_GitHub-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
+<p align="center">
+  <a href="https://github.com/evagr11">
+    <img src="https://img.shields.io/badge/Eva_Gallardo-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
-</div>
+  <a href="https://github.com/AnaNunezRejon">
+    <img src="https://img.shields.io/badge/Ana_Núñez-6c5ce7?style=for-the-badge&logo=github&logoColor=white"/>
+  </a>
+  <a href="https://github.com/Anyeel">
+    <img src="https://img.shields.io/badge/Ángel_Millán-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
+  </a>
+  <a href="https://github.com/nicocorbi">
+    <img src="https://img.shields.io/badge/Nicolás_Corbi-6c5ce7?style=for-the-badge&logo=github&logoColor=white"/>
+  </a>
+</p>
+
+<p align="center">
+  <sub><b>Tutores:</b> Guillermo Sandoval Schmidt · Javier Martín Gómez</sub>
+</p>
+
+---
 
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=0:3f51b5,100:6c5ce7&height=80&section=footer" width="100%"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6c5ce7,100:3f51b5&height=100&section=footer" width="100%"/>
+  <sub>© 2025 iMirly — Proyecto académico DAM · Granada, España</sub>
 </div>
