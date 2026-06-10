@@ -1,16 +1,18 @@
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=rect&color=0:6c5ce7,100:3f51b5&height=180&section=header&text=iMirly%20App%20Antigua&fontSize=60&fontColor=fff&fontAlignY=40&desc=Primera%20versi%C3%B3n%20Android%20del%20marketplace%20iMirly&descAlignY=70&descSize=18" width="100%"/>
 </div>
-
 <br>
-
 <div align="center">
-  <a href="https://github.com/iMirly/iMirlyAppAntigua" target="_blank">
+<a href="https://github.com/iMirly/iMirlyAppAntigua" target="_blank">
     <img src="https://img.shields.io/badge/Ver_Código-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
   <a href="https://github.com/iMirly/iMirly" target="_blank">
     <img src="https://img.shields.io/badge/Repositorio_Principal-6c5ce7?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
+</div>
+<br>
+
+<div align="center">
   <img src="https://img.shields.io/badge/Status-Legacy-9E9E9E?style=for-the-badge" alt="Status" />
   <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin" />
@@ -173,14 +175,14 @@ No requiere backend: todos los datos provienen de `app/src/main/assets/`.
 <p align="center"><b>Trabajo Fin de Ciclo DAM — New Digital Talent, Granada · 2025</b></p>
 
 <p align="center">
-  <a href="https://github.com/evagr11">
-    <img src="https://img.shields.io/badge/Eva_Gallardo-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
-  </a>
   <a href="https://github.com/AnaNunezRejon">
     <img src="https://img.shields.io/badge/Ana_Núñez-6c5ce7?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
   <a href="https://github.com/Anyeel">
     <img src="https://img.shields.io/badge/Ángel_Millán-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
+  </a>
+  <a href="https://github.com/evagr11">
+    <img src="https://img.shields.io/badge/Eva_Gallardo-3f51b5?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
   <a href="https://github.com/nicocorbi">
     <img src="https://img.shields.io/badge/Nicolás_Corbi-6c5ce7?style=for-the-badge&logo=github&logoColor=white"/>
@@ -191,9 +193,8 @@ No requiere backend: todos los datos provienen de `app/src/main/assets/`.
   <sub><b>Tutores:</b> Guillermo Sandoval Schmidt · Javier Martín Gómez</sub>
 </p>
 
----
 
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6c5ce7,100:3f51b5&height=100&section=footer" width="100%"/>
-  <sub>© 2025 iMirly — Proyecto académico DAM · Granada, España</sub>
+  <sub>© 2026 iMirly — Proyecto académico DAM · Granada, España</sub>
 </div>
